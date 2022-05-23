@@ -43,6 +43,7 @@ void GameScene::Initialize() {
 	// ライン描画が参照するビュープロジェクションを指定する (アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
+	/*
 #pragma region スケーリング
 	
 	// X, Y, Z 方向のスケーリングを設定
@@ -68,111 +69,6 @@ void GameScene::Initialize() {
 #pragma endregion 
 
 #pragma region 回転
-
-	//// X, Y, Z 軸周りの回転角を設定
-	//worldTransform_.rotation_ = { 0.0f, 0.0f, 0.785398f };
-
-	//// Z軸回転行列を宣言
-	//Matrix4 matRotZ;
-
-	//// 回転行列の各要素を設定する
-	//matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
-	//matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
-	//matRotZ.m[0][2] = 0.0f;
-	//matRotZ.m[0][3] = 0.0f;
-
-	//matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
-	//matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
-	//matRotZ.m[1][2] = 0.0f;
-	//matRotZ.m[1][3] = 0.0f;
-
-	//matRotZ.m[2][0] = 0.0f;
-	//matRotZ.m[2][1] = 0.0f;
-	//matRotZ.m[2][2] = 1.0f;
-	//matRotZ.m[2][3] = 0.0f;
-
-	//matRotZ.m[3][0] = 0.0f;
-	//matRotZ.m[3][1] = 0.0f;
-	//matRotZ.m[3][2] = 0.0f;
-	//matRotZ.m[3][3] = 1.0f;
-
-	//// 単位行列を代入 ②
-	//worldTransform_.matWorld_.IdentityMatrix();
-	//// 掛け算をして代入
-	//worldTransform_.matWorld_ *= matRotZ;
-
-	//// 行列の転送
-	//worldTransform_.TransferMatrix();
-
-	//// X, Y, Z 軸周りの回転角を設定
-	//worldTransform_.rotation_ = { 0.785398f , 0.0f, 0.0f};
-
-	//// Z軸回転行列を宣言
-	//Matrix4 matRotX;
-
-	//// 回転行列の各要素を設定する
-	//matRotX.m[0][0] = 1.0f;
-	//matRotX.m[0][1] = 0.0f;
-	//matRotX.m[0][2] = 0.0f;
-	//matRotX.m[0][3] = 0.0f;
-
-	//matRotX.m[1][0] = 0.0f;
-	//matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
-	//matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
-	//matRotX.m[1][3] = 0.0f;
-
-	//matRotX.m[2][0] = 0.0f;
-	//matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
-	//matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
-	//matRotX.m[2][3] = 0.0f;
-
-	//matRotX.m[3][0] = 0.0f;
-	//matRotX.m[3][1] = 0.0f;
-	//matRotX.m[3][2] = 0.0f;
-	//matRotX.m[3][3] = 1.0f;
-
-	//// 単位行列を代入 ②
-	//worldTransform_.matWorld_.IdentityMatrix();
-	//// 掛け算をして代入
-	//worldTransform_.matWorld_ *= matRotX;
-
-	//// 行列の転送
-	//worldTransform_.TransferMatrix();
-
-	//// X, Y, Z 軸周りの回転角を設定
-	//worldTransform_.rotation_ = { 0.0f , 0.785398f, 0.0f };
-
-	//// Z軸回転行列を宣言
-	//Matrix4 matRotY;
-
-	//// 回転行列の各要素を設定する
-	//matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
-	//matRotY.m[0][1] = 0.0f;
-	//matRotY.m[0][2] = -sin(worldTransform_.rotation_.y);
-	//matRotY.m[0][3] = 0.0f;
-
-	//matRotY.m[1][0] = 0.0f;
-	//matRotY.m[1][1] = 1.0f;
-	//matRotY.m[1][2] = 0.0f;
-	//matRotY.m[1][3] = 0.0f;
-
-	//matRotY.m[2][0] = sin(worldTransform_.rotation_.y);
-	//matRotY.m[2][1] = 0.0f;
-	//matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
-	//matRotY.m[2][3] = 0.0f;
-
-	//matRotY.m[3][0] = 0.0f;
-	//matRotY.m[3][1] = 0.0f;
-	//matRotY.m[3][2] = 0.0f;
-	//matRotY.m[3][3] = 1.0f;
-
-	//// 単位行列を代入 ②
-	//worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-	//// 掛け算をして代入
-	//worldTransform_.matWorld_ *= matRotY;
-
-	//// 行列の転送
-	//worldTransform_.TransferMatrix();
 
 	// X, Y, Z 軸周りの回転角を設定
 	worldTransform_.rotation_ = { 0.785398f, 0.785398f, 0.785398f };
@@ -284,6 +180,7 @@ void GameScene::Initialize() {
 	worldTransform_.TransferMatrix();
 
 #pragma endregion
+	*/
 }
 
 void GameScene::Update() {
