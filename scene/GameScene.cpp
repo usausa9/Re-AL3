@@ -4,6 +4,8 @@
 #include "PrimitiveDrawer.h"
 #include <cassert>
 
+#define XM_PI 3.141592
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -25,7 +27,6 @@ void GameScene::Initialize() {
 	// 3Dモデルの生成
 	model_ = Model::Create();
 
-
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	// ビュープロジェクションの初期化
@@ -43,144 +44,14 @@ void GameScene::Initialize() {
 	// ライン描画が参照するビュープロジェクションを指定する (アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
-	/*
-#pragma region スケーリング
-	
-	// X, Y, Z 方向のスケーリングを設定
-	worldTransform_.scale_ = { 5.0f,1.0f,1.0f };
+	//スケールチェンジ初期化
+	matrix.ScaleChange(worldTransform_, 5.0f, 1.0f, 1.0f);
+	//回転初期化
+	matrix.RotaChange(worldTransform_, 0.785398f, 0.785398f, 0.785398f);
+	//平行移動
+	matrix.ChangeTranslation(worldTransform_, 0.0f, 10.0f, 0.0f);
 
-	// スケーリング行列を宣言
-	Matrix4 matScale;
-
-	// スケーリング倍率を行列に設定する ①
-	matScale.m[0][0] = worldTransform_.scale_.x;
-	matScale.m[1][1] = worldTransform_.scale_.y;
-	matScale.m[2][2] = worldTransform_.scale_.z;
-	matScale.m[3][3] = 1.0f;
-
-	// 単位行列を代入 ②
-	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-	// 掛け算をして代入
-	worldTransform_.matWorld_ *= matScale;
-
-	// 行列の転送
-	worldTransform_.TransferMatrix();
-	
-#pragma endregion 
-
-#pragma region 回転
-
-	// X, Y, Z 軸周りの回転角を設定
-	worldTransform_.rotation_ = { 0.785398f, 0.785398f, 0.785398f };
-	
-	// 合成用回転行列を宣言
-	Matrix4 matRot;
-
-	// Z軸回転行列を宣言
-	Matrix4 matRotZ;
-	// X軸回転行列を宣言
-	Matrix4 matRotX;
-	// Y軸回転行列を宣言
-	Matrix4 matRotY;
-
-	// 回転行列の各要素を設定する
-	matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
-	matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
-	matRotZ.m[0][2] = 0.0f;
-	matRotZ.m[0][3] = 0.0f;
-	
-	matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
-	matRotZ.m[1][2] = 0.0f;
-	matRotZ.m[1][3] = 0.0f;
-	
-	matRotZ.m[2][0] = 0.0f;
-	matRotZ.m[2][1] = 0.0f;
-	matRotZ.m[2][2] = 1.0f;
-	matRotZ.m[2][3] = 0.0f;
-	
-	matRotZ.m[3][0] = 0.0f;
-	matRotZ.m[3][1] = 0.0f;
-	matRotZ.m[3][2] = 0.0f;
-	matRotZ.m[3][3] = 1.0f;
-
-	// 回転行列の各要素を設定する
-	matRotX.m[0][0] = 1.0f;
-	matRotX.m[0][1] = 0.0f;
-	matRotX.m[0][2] = 0.0f;
-	matRotX.m[0][3] = 0.0f;
-
-	matRotX.m[1][0] = 0.0f;
-	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
-	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
-	matRotX.m[1][3] = 0.0f;
-
-	matRotX.m[2][0] = 0.0f;
-	matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
-	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
-	matRotX.m[2][3] = 0.0f;
-
-	matRotX.m[3][0] = 0.0f;
-	matRotX.m[3][1] = 0.0f;
-	matRotX.m[3][2] = 0.0f;
-	matRotX.m[3][3] = 1.0f;
-
-	// 回転行列の各要素を設定する
-	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
-	matRotY.m[0][1] = 0.0f;
-	matRotY.m[0][2] = -sin(worldTransform_.rotation_.y);
-	matRotY.m[0][3] = 0.0f;
-
-	matRotY.m[1][0] = 0.0f;
-	matRotY.m[1][1] = 1.0f;
-	matRotY.m[1][2] = 0.0f;
-	matRotY.m[1][3] = 0.0f;
-
-	matRotY.m[2][0] = sin(worldTransform_.rotation_.y);
-	matRotY.m[2][1] = 0.0f;
-	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
-	matRotY.m[2][3] = 0.0f;
-
-	matRotY.m[3][0] = 0.0f;
-	matRotY.m[3][1] = 0.0f;
-	matRotY.m[3][2] = 0.0f;
-	matRotY.m[3][3] = 1.0f;
-
-	matRotZ *= matRotX;
-	matRotZ *= matRotY;
-	matRot = matRotZ;
-	// 単位行列を代入 ②
-	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-	// 掛け算をして代入
-	worldTransform_.matWorld_ *= matRot;
-	
-	// 行列の転送
-	worldTransform_.TransferMatrix();
-#pragma endregion 
-
-#pragma region 平行移動
-
-	// X,Y,Z軸周りの平行移動を設定
-	worldTransform_.translation_ = { 0,10,0 };
-	
-	//// 平行移動行列を宣言
-	Matrix4 matTrans = MathUtility::Matrix4Identity();
-
-	matTrans.m[3][0] = worldTransform_.translation_.x;
-	matTrans.m[3][1] = worldTransform_.translation_.y;
-	matTrans.m[3][2] = worldTransform_.translation_.z;
-
-	// 単位行列を代入 
-	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-
-	// 掛け算をして代入
-	worldTransform_.matWorld_ *= matTrans;
-
-	// 行列の転送
-	worldTransform_.TransferMatrix();
-
-#pragma endregion
-	*/
+	matrix.UpdataMatrix(worldTransform_);
 }
 
 void GameScene::Update() {
@@ -234,7 +105,6 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
-	
 #pragma endregion
 
 	// ライン描画が参照するビュープロジェクションを指定する (アドレス渡し)

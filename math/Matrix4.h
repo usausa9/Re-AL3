@@ -19,6 +19,6 @@ class Matrix4 {
 	// 代入演算子オーバーロード
 	Matrix4& operator*=(const Matrix4& m2);
 
-	//// 単位行列を作成
-	//void IdentityMatrix();
+	// 単位行列を作成
+	void IdentityMatrix();
 };

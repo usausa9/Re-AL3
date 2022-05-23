@@ -11,6 +11,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include "WinApp.h"
+#include "Matrix.h"
 
 /// <summary>
 /// ゲームシーン
@@ -62,6 +63,9 @@ class GameScene {
 
 	// デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
+
+	// まとりっくす
+	Matrix matrix;
 
 	/// <summary>
 	/// ゲームシーン用
