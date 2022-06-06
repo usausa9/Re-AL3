@@ -130,7 +130,7 @@ void Matrix::ChangeTranslation(WorldTransform worldTransform)
 }
 
 //‘g‚İ‡‚í‚¹
-void Matrix::UpdataMatrix(WorldTransform& worldTransform)
+void Matrix::UpdateMatrix(WorldTransform& worldTransform)
 {
 	// s—ñ ‡¬
 	ScaleChange(worldTransform);

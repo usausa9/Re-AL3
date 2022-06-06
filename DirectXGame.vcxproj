@@ -101,6 +101,7 @@
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="XMFloat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="XMFloat.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Obj.hlsli" />

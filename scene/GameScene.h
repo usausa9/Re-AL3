@@ -12,6 +12,7 @@
 #include "DebugCamera.h"
 #include "WinApp.h"
 #include "Matrix.h"
+#include "XMFloat.h"
 
 /// <summary>
 /// ゲームシーン
@@ -56,8 +57,11 @@ class GameScene {
 	// 3Dモデル
 	Model* model_ = nullptr;
 
+	// ランダム格納
+	XMFloat random;
+
 	// ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	WorldTransform worldTransforms_[100];
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
@@ -66,6 +70,9 @@ class GameScene {
 
 	// まとりっくす
 	Matrix matrix;
+
+	// カメラ上方向の角度
+	float viewAngle = 0.0f;
 
 	/// <summary>
 	/// ゲームシーン用

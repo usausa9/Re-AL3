@@ -26,7 +26,7 @@ public:
 
 	void ChangeTranslation(WorldTransform worldTransform);
 
-	void UpdataMatrix(WorldTransform& worldTransform);
+	void UpdateMatrix(WorldTransform& worldTransform);
 
 private:
 	MatResult matResult;
