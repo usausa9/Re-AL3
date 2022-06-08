@@ -19,6 +19,22 @@
 /// </summary>
 class GameScene {
 
+public: // メンバ変数
+	// パーツID
+	enum PartId {
+		kRoot,	// 大元
+		kSpine,	// 脊髄
+		kChest,	// 胸
+		kHead,	// 頭
+		kArmL,	// 左腕
+		kArmR,	// 右腕
+		kHip,	// 尻
+		kLegL,	// 左足
+		kLegR,	// 右足
+
+		kNumPartId
+	};
+
   public: // メンバ関数
 	/// <summary>
 	/// コンストクラタ
@@ -58,7 +74,7 @@ class GameScene {
 	Model* model_ = nullptr;
 
 	// ランダム格納
-	XMFloat random;
+	XMFloat3 random;
 
 	// ワールドトランスフォーム
 	WorldTransform worldTransforms_[100];

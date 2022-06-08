@@ -1,5 +1,5 @@
 #pragma once
-struct XMFloat
+struct XMFloat3
 {
 	float x;
 	float y;
