@@ -39,25 +39,11 @@ void GameScene::Initialize() {
 
 #pragma region ビュー変換行列
 	// カメラ視点座標を設定
-	// viewProjection_.eye = { 0,0,-10 };
+	viewProjection_.eye = { 0,10,-20 };
 
 	// カメラ注視点座標を設定
-	// viewProjection_.target = { 10,0,0 };
+	viewProjection_.target = worldTransforms_[PartId::kRoot].translation_;
 
-	// カメラ上方向ベクトルを設定(右上45度指定)
-	// viewProjection_.up = { cosf(XM_PI / 4.0f), sinf(XM_PI / 4.0f), 0.0f };
-#pragma endregion
-#pragma region 射影変換行列
-	// カメラ垂直方向視野角を設定
-	/*viewProjection_.fovAngleY = 10.0f * (XM_PI / 180);*/
-
-	// アスペクト比を設定(1.0fであると、画面比1:1のときに正常な大きさになる)
-	// viewProjection_.aspectRatio = 1.0f;
-
-	// ニアクリップ、ファークリップを設定
-	/*viewProjection_.nearZ = 52.0f;
-	viewProjection_.farZ = 53.0f;*/
-	
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 #pragma endregion
@@ -77,275 +63,157 @@ void GameScene::Initialize() {
 
 	worldTransforms_[PartId::kRoot].Initialize();
 
-	worldTransforms_[PartId::kSpine].Initialize();
-	worldTransforms_[PartId::kSpine].translation_ = { 0, 4.5f, 0 };
-	worldTransforms_[PartId::kSpine].parent_ = &worldTransforms_[PartId::kRoot];
-
-	worldTransforms_[PartId::kChest].Initialize();
-	worldTransforms_[PartId::kChest].translation_ = { 0, 1.0f, 0 };
-	worldTransforms_[PartId::kChest].parent_ = &worldTransforms_[PartId::kSpine];
-							 
 	worldTransforms_[PartId::kHead].Initialize();
-	worldTransforms_[PartId::kHead].translation_ = { 0, 3.0f, 0 };
-	worldTransforms_[PartId::kHead].parent_ = &worldTransforms_[PartId::kChest];
-							 
+	worldTransforms_[PartId::kHead].translation_ = { 0, 0, 2.0f };
+	worldTransforms_[PartId::kHead].parent_ = &worldTransforms_[PartId::kRoot];
+
 	worldTransforms_[PartId::kArmL].Initialize();
-	worldTransforms_[PartId::kArmL].translation_ = { -3.0f, 0, 0 };
-	worldTransforms_[PartId::kArmL].parent_ = &worldTransforms_[PartId::kChest];
-							 
+	worldTransforms_[PartId::kArmL].translation_ = { -2.0f, 0, 0 };
+	worldTransforms_[PartId::kArmL].parent_ = &worldTransforms_[PartId::kRoot];
+
 	worldTransforms_[PartId::kArmR].Initialize();
-	worldTransforms_[PartId::kArmR].translation_ = { 3.0f, 0, 0 };
-	worldTransforms_[PartId::kArmR].parent_ = &worldTransforms_[PartId::kChest];
-				  			 
-	worldTransforms_[PartId::kHip].Initialize();
-	worldTransforms_[PartId::kHip].translation_ = { 0, -2.0f, 0 };
-	worldTransforms_[PartId::kHip].parent_ = &worldTransforms_[PartId::kSpine];
-				  			 
-	worldTransforms_[PartId::kLegL].Initialize();
-	worldTransforms_[PartId::kLegL].translation_ = { -3.0f, -3.0f, 0 };
-	worldTransforms_[PartId::kLegL].parent_ = &worldTransforms_[PartId::kHip];
-				  			 
-	worldTransforms_[PartId::kLegR].Initialize();
-	worldTransforms_[PartId::kLegR].translation_ = { 3.0f, -3.0f, 0 };
-	worldTransforms_[PartId::kLegR].parent_ = &worldTransforms_[PartId::kHip];
+	worldTransforms_[PartId::kArmR].translation_ = { 2.0f, 0, 0 };
+	worldTransforms_[PartId::kArmR].parent_ = &worldTransforms_[PartId::kRoot];
 
-	//for (WorldTransform& worldTransform : worldTransforms_) {
-	//	// ワールドトランスフォームの初期化
-	//	worldTransform.Initialize();
-	//	//スケールチェンジ初期化
-	//	matrix.ScaleChange(worldTransform, 1.0f, 1.0f, 1.0f, 1.0f);
+	worldTransforms_[object2].Initialize();
+	worldTransforms_[object2].translation_ = { -20.0f, 0, 20.0f };
+	
+	worldTransforms_[object3].Initialize();
+	worldTransforms_[object3].translation_ = { 0, 0, 20.0f };
 
-	//	//乱数範囲の指定
-	//	std::uniform_real_distribution<float> rotaDistX(0, XM_PI);
-	//	std::uniform_real_distribution<float> rotaDistY(0, XM_PI);
-	//	std::uniform_real_distribution<float> rotaDistZ(0, XM_PI);
-
-	//	random.x = rotaDistX(engine);
-	//	random.y = rotaDistY(engine);
-	//	random.z = rotaDistZ(engine);
-
-	//	//回転初期化
-	//	matrix.RotaChange(worldTransform, random.x, random.y, random.z);
-
-	//	//乱数範囲の指定
-	//	std::uniform_real_distribution<float> transDistX(-10, 10);
-	//	std::uniform_real_distribution<float> transDistY(-10, 10);
-	//	std::uniform_real_distribution<float> transDistZ(-10, 10);
-
-	//	random.x = transDistX(engine);
-	//	random.y = transDistY(engine);
-	//	random.z = transDistZ(engine);
-
-	//	//平行移動
-	//	matrix.ChangeTranslation(worldTransform, random.x, random.y, random.z);
-
-	//	matrix.UpdateMatrix(worldTransform);
-	//}
+	worldTransforms_[object4].Initialize();
+	worldTransforms_[object4].translation_ = { 20.0f, 0, 20.0f };
 }
 
 void GameScene::Update() {
 
-#pragma region ビュー変換行列
-//	// 視点移動処理
-//	{
-//		// 視点の移動ベクトル
-//		Vector3 move = { 0,0,0 };
-//
-//		// 視点移動の速さ
-//		const float kEyeSpeed = 0.2f;
-//
-//		// 押した方向で移動ベクトルを変更
-//		if (input_->PushKey(DIK_W))
-//		{
-//			move.z += kEyeSpeed;
-//		}
-//		else if (input_->PushKey(DIK_S))
-//		{
-//			move.z -= kEyeSpeed;
-//		}
-//
-//		// 視点移動(ベクトル加算)
-//		viewProjection_.eye += move;
-//
-//		// 行列の再計算
-//		viewProjection_.UpdateMatrix();
-//
-//		// デバッグ用表示
-//		debugText_->SetPos(50, 50);
-//		debugText_->Printf(
-//			"eye:(%f,%f,%f)",
-//			viewProjection_.eye.x,
-//			viewProjection_.eye.y,
-//			viewProjection_.eye.z);
-//	}
-//
-//	// 注視点移動処理
-//	{
-//		// 注視点の移動ベクトル
-//		Vector3 move = { 0,0,0 };
-//
-//		// 注視点移動の速さ
-//		const float kTargetSpeed = 0.2f;
-//
-//		// 押した方向で移動ベクトルを変更
-//		if (input_->PushKey(DIK_LEFT))
-//		{
-//			move.x -= kTargetSpeed;
-//		}
-//		else if (input_->PushKey(DIK_RIGHT))
-//		{
-//			move.x += kTargetSpeed;
-//		}
-//
-//		// 注視点移動(ベクトルの加算)
-//		viewProjection_.target += move;
-//
-//		// 行列の再計算
-//		viewProjection_.UpdateMatrix();
-//
-//		// デバッグ用表示
-//		debugText_->SetPos(50, 70);
-//		debugText_->Printf(
-//			"target:(%f,%f,%f)",
-//			viewProjection_.target.x,
-//			viewProjection_.target.y,
-//			viewProjection_.target.z);
-//	}
-//
-//	// 上方向回転処理
-//	{
-//		// 上方向の回転速さ[ラジアン/フレーム]
-//		const float kUpRotSpeed = 0.05f;
-//
-//		// 押した方向で移動ベクトルを変更
-//		if (input_->PushKey(DIK_SPACE))
-//		{
-//			viewAngle += kUpRotSpeed;
-//			
-//			// 2πを越えたら0にする
-//			viewAngle = fmodf(viewAngle, XM_PI * 2.0f);
-//		}
-//
-//		// 上方向ベクトルを計算(半径1の演習場)
-//		viewProjection_.up = {cosf(viewAngle), sinf(viewAngle), 0.0f};
-//
-//		// 行列の再計算
-//		viewProjection_.UpdateMatrix();
-//
-//		// デバッグ用表示
-//		debugText_->SetPos(50, 90);
-//		debugText_->Printf(
-//			"up:(%f,%f,%f)",
-//			viewProjection_.up.x,
-//			viewProjection_.up.y,
-//			viewProjection_.up.z);
-//	}
-#pragma endregion
-#pragma region 射影変換行列
-	//// FoV変更処理
-	//{
-	//	const float angleChangeSpeed = 0.05f;
-	//	// 上キーで視野角が広がる 下キーで視野角が狭まる
-	//	if (input_->PushKey(DIK_UP)) {
-	//		if (viewProjection_.fovAngleY < XM_PI) {
-	//			viewProjection_.fovAngleY += angleChangeSpeed;
-	//		}
-	//	}
-	//	else if (input_->PushKey(DIK_DOWN)) {
-	//		if (viewProjection_.fovAngleY > 0.05f) {
-	//			viewProjection_.fovAngleY -= angleChangeSpeed;
-	//		}
-	//	}
-	//	// 行列の再計算
-	//	viewProjection_.UpdateMatrix();
-
-	//	// デバッグ用表示
-	//	debugText_->SetPos(50, 110);
-	//	debugText_->Printf(
-	//		"fovAnglrY(Degree):%f",
-	//		(viewProjection_.fovAngleY) / (XM_PI / 180));
-	//}
-//
-//// クリップ距離変更処理
-//	{
-//		const float nearChangeSpeed = 0.05f;
-//		// 上キーで視野角が広がる 下キーで視野角が狭まる
-//		if (input_->PushKey(DIK_UP)) {
-//			viewProjection_.nearZ += nearChangeSpeed;
-//		}
-//		else if (input_->PushKey(DIK_DOWN)) {
-//			viewProjection_.nearZ -= nearChangeSpeed;
-//		}
-//		// 行列の再計算
-//		viewProjection_.UpdateMatrix();
-//
-//		// デバッグ用表示
-//		debugText_->SetPos(50, 130);
-//		debugText_->Printf("nearZ:%f",viewProjection_.nearZ);
-//	}
-
-#pragma endregion
-
-	// キャラクター移動処理
+	// ワールドトランスフォーム
+	if (input_->TriggerKey(DIK_Q) == true)
+{
+	if (moveMode == 0)
 	{
-		// キャラクターの移動ベクトル
-		XMFloat3 move = { 0, 0, 0 };
+		moveMode = 1;
+	}
+	else { moveMode = 0; }
+}
 
-		// キャラクター移動の速さ
-		const float kCharacterSpeed = 0.2f;
+if (moveMode == 0)
+{
+	const float kMoveSpeed = 0.5f;
 
-		// 押した方向で移動ベクトルを変更
-		if (input_->PushKey(DIK_LEFT)) {
-			move = { -kCharacterSpeed, 0, 0 };
-		}
-		else if (input_->PushKey(DIK_RIGHT)) {
-			move = { kCharacterSpeed, 0, 0 };
-		}
+	// 正面ベクトルの生成
+	Vector3 frontVec;
+	Vector3 target = viewProjection_.target;
 
-		// 注視点移動 (ベクトルの加算)
-		worldTransforms_[PartId::kRoot].translation_.x += move.x;
-		worldTransforms_[PartId::kRoot].translation_.y += move.y;
-		worldTransforms_[PartId::kRoot].translation_.z += move.z;
+	// 正面ベクトルの計算
+	frontVec = target -= viewProjection_.eye;
+	
+	// 正面ベクトルの正規化
+	MathUtility::Vector3Normalize(frontVec);	
 
-		for (int i = 0; i < kNumPartId; i++)
-		{
-			matrix.UpdateMatrix(worldTransforms_[i]);
-		}
-
-		// デバッグ用表示
-		debugText_->SetPos(50, 150);
-		debugText_->Printf(
-			"Root:(%f,%f,%f)", worldTransforms_[PartId::kRoot].translation_.x,
-			worldTransforms_[PartId::kRoot].translation_.y,
-			worldTransforms_[PartId::kRoot].translation_.z);
+	if (input_->PushKey(DIK_W))
+	{
+		worldTransforms_[PartId::kRoot].translation_.x += frontVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kRoot].translation_.z += frontVec.z * kMoveSpeed;
+	}
+	if (input_->PushKey(DIK_S))
+	{
+		worldTransforms_[PartId::kRoot].translation_.x += -frontVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kRoot].translation_.z += -frontVec.z * kMoveSpeed;
 	}
 
-	// 上半身回転処理
-	{
-		// 上半身の回転の速さ[ラジアン/frame]
-		const float kChestRotSpeed = 0.05f;
+	// 右ベクトル・仮ベクトルの宣言
+	Vector3 rightVec;
+	Vector3 tentativeVec = { 0,1,0 };
 
-		// 押した方向で移動ベクトルを変更
-		if (input_->PushKey(DIK_U)) {
-			worldTransforms_[PartId::kChest].rotation_.y -= kChestRotSpeed;
-		}
-		else if (input_->PushKey(DIK_I)) {
-			worldTransforms_[PartId::kChest].rotation_.y += kChestRotSpeed;
-		}
-	}
-	// 上半身回転処理
-	{
-		// 上半身の回転の速さ[ラジアン/frame]
-		const float kHipRotSpeed = 0.05f;
+	// 右ベクトルを作成
+	rightVec = MathUtility::Vector3Cross(tentativeVec, frontVec);
 
-		// 押した方向で移動ベクトルを変更
-		if (input_->PushKey(DIK_J)) {
-			worldTransforms_[PartId::kHip].rotation_.y -= kHipRotSpeed;
-		}
-		else if (input_->PushKey(DIK_K)) {
-			worldTransforms_[PartId::kHip].rotation_.y += kHipRotSpeed;
-		}
+	// 右ベクトルの正規化
+	MathUtility::Vector3Normalize(tentativeVec);
+
+	if (input_->PushKey(DIK_D))
+	{
+		worldTransforms_[PartId::kRoot].translation_.x += rightVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kRoot].translation_.z += rightVec.z * kMoveSpeed;
 	}
+	if (input_->PushKey(DIK_A))
+	{
+		worldTransforms_[PartId::kRoot].translation_.x += -rightVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kRoot].translation_.z += -rightVec.z * kMoveSpeed;
+	}
+}
+
+if (moveMode == 1)
+{
+	XMFloat3 move = { 0.0f, 0.0f, 0.0f };
+
+	// 回転速度
+	const float kRotSpeed = 0.05f;
+
+	if (input_->PushKey(DIK_A))
+	{
+		move = { 0, -kRotSpeed, 0 };
+	}
+	else if (input_->PushKey(DIK_D))
+	{
+		move = { 0, kRotSpeed, 0 };
+	}
+
+	worldTransforms_[PartId::kRoot].rotation_.y += move.y;
+
+	XMFloat3 frontVec = { 0.0f, 0.0f, -1.0f };	// 単位ベクトル(逆)
+	XMFloat3 resultVec = { 0.0f, 0.0f, 0.0f };	// 結果補間用ベクトル
+
+	resultVec.x = (cos(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.x +
+		sin(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.z);
+	resultVec.z = (-sinf(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.x +
+		cosf(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.z);
+}
+
+	// デバッグ用表示
+	debugText_->SetPos(50, 50);
+	debugText_->Printf(
+		"kRoot:(%f,%f,%f)", worldTransforms_[PartId::kRoot].translation_.x,
+		worldTransforms_[PartId::kRoot].translation_.y,
+		worldTransforms_[PartId::kRoot].translation_.z,
+		moveMode);
+
+	debugText_->SetPos(50, 70);
+	debugText_->Printf(
+		"moveMode(Change:Q):%d", moveMode);
+	
+
+	for (int i = 0; i < kNumPartId; i++)
+	{
+		matrix.UpdateMatrix(worldTransforms_[i]);
+	}
+
+	// ビュープロジェクション
+	const float kCameraSpeed = 0.1f;
+
+	if (input_->PushKey(DIK_UP))
+	{
+		viewProjection_.eye.z += kCameraSpeed;
+		viewProjection_.target.z += kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_DOWN))
+	{
+		viewProjection_.eye.z -= kCameraSpeed;
+		viewProjection_.target.z -= kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_RIGHT))
+	{
+		viewProjection_.eye.x += kCameraSpeed;
+		viewProjection_.target.x += kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_LEFT))
+	{
+		viewProjection_.eye.x -= kCameraSpeed;
+		viewProjection_.target.x -= kCameraSpeed;
+	}
+
+	viewProjection_.UpdateMatrix();
 
 	debugCamera_->Update();
 }
@@ -377,7 +245,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	
-	for (int i = 2; i < kNumPartId; i++)
+	for (int i = 0; i < kNumPartId; i++)
 	{
 		model_->Draw(worldTransforms_[i], viewProjection_, textureHandle_);
 	}
@@ -406,10 +274,10 @@ void GameScene::Draw() {
 
 	// ライン描画が参照するビュープロジェクションを指定する (アドレス渡し)
 
-	for (float i = 0; i < 21; i++)
-	{
-		PrimitiveDrawer::GetInstance()->DrawLine3d({ -20, -20 + (i * 2), 0 }, {  20, -20 + (i * 2), 0 }, { 1,0,0,1 });
-		PrimitiveDrawer::GetInstance()->DrawLine3d({ -20 + (i * 2), -20, 0 }, { -20 + (i * 2), 20, 0 }, { 0,1,0,1 });
-		PrimitiveDrawer::GetInstance()->DrawLine3d({ -20 + (i * 2), 0, -20 }, { -20 + (i * 2) ,0 ,20, }, { 0,0,1,1 });
-	}
+	//for (float i = 0; i < 21; i++)
+	//{
+	//	PrimitiveDrawer::GetInstance()->DrawLine3d({ -20, -20 + (i * 2), 0 }, {  20, -20 + (i * 2), 0 }, { 1,0,0,1 });
+	//	PrimitiveDrawer::GetInstance()->DrawLine3d({ -20 + (i * 2), -20, 0 }, { -20 + (i * 2), 20, 0 }, { 0,1,0,1 });
+	//	PrimitiveDrawer::GetInstance()->DrawLine3d({ -20 + (i * 2), 0, -20 }, { -20 + (i * 2) ,0 ,20, }, { 0,0,1,1 });
+	//}
 }
