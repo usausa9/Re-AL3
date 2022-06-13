@@ -71,23 +71,14 @@ public: // メンバ変数
 	// 3Dモデル
 	Model* model_ = nullptr;
 
-	// ランダム格納
-	XMFloat3 random;
-
 	// ワールドトランスフォーム
 	WorldTransform worldTransforms_[100];
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
-	// デバッグカメラ
-	DebugCamera* debugCamera_ = nullptr;
-
-	// まとりっくす
+	// マトリックス生成
 	Matrix matrix;
 
-	// カメラ上方向の角度
-	float viewAngle = 0.0f;
-	
 	// 操作切り替え
 	bool moveMode;
 
