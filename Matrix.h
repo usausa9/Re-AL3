@@ -7,8 +7,7 @@ struct MatResult {
 	Matrix4 Trans;
 };
 
-class Matrix
-{
+class Matrix {
 public:
 	Matrix();
 

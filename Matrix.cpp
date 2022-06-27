@@ -13,13 +13,20 @@ Matrix::Matrix()
 }
 
 // íPà çsóÒ
-void Matrix::InitMatrix(Matrix4& m) {
-
+void Matrix::InitMatrix(Matrix4& m)
+{
 	Matrix4 initMatrix;
-	initMatrix.m[0][0] = 1.0f;
-	initMatrix.m[1][1] = 1.0f;
-	initMatrix.m[2][2] = 1.0f;
-	initMatrix.m[3][3] = 1.0f;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (i != j) {
+				initMatrix.m[j][i] = 0;
+			}
+			else {
+				initMatrix.m[j][i] = 1.0f;
+			}
+		}
+	}
 
 	m = initMatrix;
 }

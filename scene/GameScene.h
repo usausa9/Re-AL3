@@ -22,10 +22,10 @@ class GameScene {
 public: // メンバ変数
 	// パーツID
 	enum PartId {
-		kRoot,	// 大元
+		kCenter,	// 大元
 		kHead,	// 頭
-		kArmL,	// 左腕
-		kArmR,	// 右腕
+		kLeft,	// 左腕
+		kRight,	// 右腕
 		object2,
 		object3,
 		object4,

@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 #pragma region ビュー変換行列
 	// カメラ視点,注視点座標を設定
 	viewProjection_.eye = { 0,10,-20 };
-	viewProjection_.target = worldTransforms_[PartId::kRoot].translation_;
+	viewProjection_.target = worldTransforms_[PartId::kCenter].translation_;
 
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
@@ -47,13 +47,13 @@ void GameScene::Initialize() {
 	}
 
 	worldTransforms_[PartId::kHead].translation_ = { 0, 0, 2.0f };
-	worldTransforms_[PartId::kHead].parent_ = &worldTransforms_[PartId::kRoot];
+	worldTransforms_[PartId::kHead].parent_ = &worldTransforms_[PartId::kCenter];
 
-	worldTransforms_[PartId::kArmL].translation_ = { -2.0f, 0, 0 };
-	worldTransforms_[PartId::kArmL].parent_ = &worldTransforms_[PartId::kRoot];
+	worldTransforms_[PartId::kLeft].translation_ = { -2.0f, 0, 0 };
+	worldTransforms_[PartId::kLeft].parent_ = &worldTransforms_[PartId::kCenter];
 
-	worldTransforms_[PartId::kArmR].translation_ = { 2.0f, 0, 0 };
-	worldTransforms_[PartId::kArmR].parent_ = &worldTransforms_[PartId::kRoot];
+	worldTransforms_[PartId::kRight].translation_ = { 2.0f, 0, 0 };
+	worldTransforms_[PartId::kRight].parent_ = &worldTransforms_[PartId::kCenter];
 
 	worldTransforms_[object2].translation_ = { -20.0f, 0, 20.0f };
 	worldTransforms_[object3].translation_ = { 0, 0, 20.0f };
@@ -82,12 +82,12 @@ if (moveMode == 0) {
 	MathUtility::Vector3Normalize(frontVec);	
 
 	if (input_->PushKey(DIK_W)) {
-		worldTransforms_[PartId::kRoot].translation_.x += frontVec.x * kMoveSpeed;
-		worldTransforms_[PartId::kRoot].translation_.z += frontVec.z * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.x += frontVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.z += frontVec.z * kMoveSpeed;
 	}
 	if (input_->PushKey(DIK_S)) {
-		worldTransforms_[PartId::kRoot].translation_.x += -frontVec.x * kMoveSpeed;
-		worldTransforms_[PartId::kRoot].translation_.z += -frontVec.z * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.x += -frontVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.z += -frontVec.z * kMoveSpeed;
 	}
 
 	// 右ベクトル・仮ベクトルの宣言
@@ -101,12 +101,12 @@ if (moveMode == 0) {
 	MathUtility::Vector3Normalize(tentativeVec);
 
 	if (input_->PushKey(DIK_D)) {
-		worldTransforms_[PartId::kRoot].translation_.x += rightVec.x * kMoveSpeed;
-		worldTransforms_[PartId::kRoot].translation_.z += rightVec.z * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.x += rightVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.z += rightVec.z * kMoveSpeed;
 	}
 	if (input_->PushKey(DIK_A)) {
-		worldTransforms_[PartId::kRoot].translation_.x += -rightVec.x * kMoveSpeed;
-		worldTransforms_[PartId::kRoot].translation_.z += -rightVec.z * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.x += -rightVec.x * kMoveSpeed;
+		worldTransforms_[PartId::kCenter].translation_.z += -rightVec.z * kMoveSpeed;
 	}
 }
 	// バイオ歩き
@@ -123,22 +123,21 @@ if (moveMode == 1) {
 		move = { 0, kRotSpeed, 0 };
 	}
 
-	worldTransforms_[PartId::kRoot].rotation_.y += move.y;
+	worldTransforms_[PartId::kCenter].rotation_.y += move.y;
 
 	XMFloat3 frontVec = { 0.0f, 0.0f, -1.0f };	// 単位ベクトル(逆)
 	XMFloat3 resultVec = { 0.0f, 0.0f, 0.0f };	// 結果補間用ベクトル
 
-	resultVec.x = (cos(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.x +
-				   sin(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.z);
-	resultVec.z = (-sinf(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.x +
-				   cosf(worldTransforms_[PartId::kRoot].rotation_.y) * frontVec.z);
+	resultVec.x = (cos(worldTransforms_[PartId::kCenter].rotation_.y) * frontVec.x +
+				   sin(worldTransforms_[PartId::kCenter].rotation_.y) * frontVec.z);
+	resultVec.z = (-sinf(worldTransforms_[PartId::kCenter].rotation_.y) * frontVec.x +
+				   cosf(worldTransforms_[PartId::kCenter].rotation_.y) * frontVec.z);
 }
-
 	// デバッグ用表示
 	debugText_->SetPos(50, 50);
-	debugText_->Printf(	"kRoot:(%f,%f,%f)", worldTransforms_[PartId::kRoot].translation_.x,
-		worldTransforms_[PartId::kRoot].translation_.y,
-		worldTransforms_[PartId::kRoot].translation_.z);
+	debugText_->Printf(	"center:(%f,%f,%f)", worldTransforms_[PartId::kCenter].translation_.x,
+		worldTransforms_[PartId::kCenter].translation_.y,
+		worldTransforms_[PartId::kCenter].translation_.z);
 
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("moveMode(Change:Q):%d", moveMode);
