@@ -89,7 +89,7 @@ void Matrix::ChangeTranslation(WorldTransform& worldTransform, float tx, float t
 	matResult.Trans.m[3][2] = worldTransform.translation_.z;
 }
 
-
+// 合成保管用
 void Matrix::ScaleChange(WorldTransform worldTransform)
 {
 	matResult.Scale.m[0][0] = worldTransform.scale_.x;
@@ -128,7 +128,6 @@ void Matrix::RotaChange(WorldTransform worldTransform)
 	matResult.Rot *= matRotX;
 	matResult.Rot *= matRotY;
 }
-
 void Matrix::ChangeTranslation(WorldTransform worldTransform)
 {
 	matResult.Trans.m[3][0] = worldTransform.translation_.x;
@@ -136,7 +135,7 @@ void Matrix::ChangeTranslation(WorldTransform worldTransform)
 	matResult.Trans.m[3][2] = worldTransform.translation_.z;
 }
 
-//組み合わせ
+// 合成、アップデート
 void Matrix::UpdateMatrix(WorldTransform& worldTransform)
 {
 	// 行列 合成
