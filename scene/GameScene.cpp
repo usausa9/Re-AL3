@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 
 	delete model_;
 	delete debugCamera_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -27,15 +28,10 @@ void GameScene::Initialize() {
 
 	// 3Dモデルの生成
 	model_ = Model::Create();
-
-	// 乱数シード生成器
-	std::random_device seed_gen;
-	// メルセンヌ・ツイスターの乱数エンジン
-	std::mt19937_64 engine(seed_gen());
-	// 乱数範囲の指定
-	std::uniform_real_distribution<float> dist(0,640);
-	// 乱数エンジンを渡し、指定範囲からランダムな数値を得る
-	float value = dist(engine);
+	// 自キャラの生成
+	player_ = new Player();
+	// 自キャラの初期化
+	player_->Initialize(model_,textureHandle_);
 
 #pragma region ビュー変換行列
 	// カメラ視点座標を設定
@@ -57,13 +53,13 @@ void GameScene::Initialize() {
 	// ニアクリップ、ファークリップを設定
 	/*viewProjection_.nearZ = 52.0f;
 	viewProjection_.farZ = 53.0f;*/
-	
+
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 #pragma endregion
 
 	// デバッグカメラの生成
-	debugCamera_ = new DebugCamera(WinApp::kWindowWidth,WinApp::kWindowHeight);
+	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 
 	// 軸方向表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -74,73 +70,6 @@ void GameScene::Initialize() {
 
 	// ライン描画が参照するビュープロジェクションを指定する (アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
-
-	worldTransforms_[PartId::kRoot].Initialize();
-
-	worldTransforms_[PartId::kSpine].Initialize();
-	worldTransforms_[PartId::kSpine].translation_ = { 0, 4.5f, 0 };
-	worldTransforms_[PartId::kSpine].parent_ = &worldTransforms_[PartId::kRoot];
-
-	worldTransforms_[PartId::kChest].Initialize();
-	worldTransforms_[PartId::kChest].translation_ = { 0, 1.0f, 0 };
-	worldTransforms_[PartId::kChest].parent_ = &worldTransforms_[PartId::kSpine];
-							 
-	worldTransforms_[PartId::kHead].Initialize();
-	worldTransforms_[PartId::kHead].translation_ = { 0, 3.0f, 0 };
-	worldTransforms_[PartId::kHead].parent_ = &worldTransforms_[PartId::kChest];
-							 
-	worldTransforms_[PartId::kArmL].Initialize();
-	worldTransforms_[PartId::kArmL].translation_ = { -3.0f, 0, 0 };
-	worldTransforms_[PartId::kArmL].parent_ = &worldTransforms_[PartId::kChest];
-							 
-	worldTransforms_[PartId::kArmR].Initialize();
-	worldTransforms_[PartId::kArmR].translation_ = { 3.0f, 0, 0 };
-	worldTransforms_[PartId::kArmR].parent_ = &worldTransforms_[PartId::kChest];
-				  			 
-	worldTransforms_[PartId::kHip].Initialize();
-	worldTransforms_[PartId::kHip].translation_ = { 0, -2.0f, 0 };
-	worldTransforms_[PartId::kHip].parent_ = &worldTransforms_[PartId::kSpine];
-				  			 
-	worldTransforms_[PartId::kLegL].Initialize();
-	worldTransforms_[PartId::kLegL].translation_ = { -3.0f, -3.0f, 0 };
-	worldTransforms_[PartId::kLegL].parent_ = &worldTransforms_[PartId::kHip];
-				  			 
-	worldTransforms_[PartId::kLegR].Initialize();
-	worldTransforms_[PartId::kLegR].translation_ = { 3.0f, -3.0f, 0 };
-	worldTransforms_[PartId::kLegR].parent_ = &worldTransforms_[PartId::kHip];
-
-	//for (WorldTransform& worldTransform : worldTransforms_) {
-	//	// ワールドトランスフォームの初期化
-	//	worldTransform.Initialize();
-	//	//スケールチェンジ初期化
-	//	matrix.ScaleChange(worldTransform, 1.0f, 1.0f, 1.0f, 1.0f);
-
-	//	//乱数範囲の指定
-	//	std::uniform_real_distribution<float> rotaDistX(0, XM_PI);
-	//	std::uniform_real_distribution<float> rotaDistY(0, XM_PI);
-	//	std::uniform_real_distribution<float> rotaDistZ(0, XM_PI);
-
-	//	random.x = rotaDistX(engine);
-	//	random.y = rotaDistY(engine);
-	//	random.z = rotaDistZ(engine);
-
-	//	//回転初期化
-	//	matrix.RotaChange(worldTransform, random.x, random.y, random.z);
-
-	//	//乱数範囲の指定
-	//	std::uniform_real_distribution<float> transDistX(-10, 10);
-	//	std::uniform_real_distribution<float> transDistY(-10, 10);
-	//	std::uniform_real_distribution<float> transDistZ(-10, 10);
-
-	//	random.x = transDistX(engine);
-	//	random.y = transDistY(engine);
-	//	random.z = transDistZ(engine);
-
-	//	//平行移動
-	//	matrix.ChangeTranslation(worldTransform, random.x, random.y, random.z);
-
-	//	matrix.UpdateMatrix(worldTransform);
-	//}
 }
 
 void GameScene::Update() {
@@ -286,74 +215,19 @@ void GameScene::Update() {
 
 #pragma endregion
 
-	// キャラクター移動処理
-	{
-		// キャラクターの移動ベクトル
-		XMFloat3 move = { 0, 0, 0 };
-
-		// キャラクター移動の速さ
-		const float kCharacterSpeed = 0.2f;
-
-		// 押した方向で移動ベクトルを変更
-		if (input_->PushKey(DIK_LEFT)) {
-			move = { -kCharacterSpeed, 0, 0 };
-		}
-		else if (input_->PushKey(DIK_RIGHT)) {
-			move = { kCharacterSpeed, 0, 0 };
-		}
-
-		// 注視点移動 (ベクトルの加算)
-		worldTransforms_[PartId::kRoot].translation_.x += move.x;
-		worldTransforms_[PartId::kRoot].translation_.y += move.y;
-		worldTransforms_[PartId::kRoot].translation_.z += move.z;
-
-		for (int i = 0; i < kNumPartId; i++)
-		{
-			matrix.UpdateMatrix(worldTransforms_[i]);
-		}
-
-		// デバッグ用表示
-		debugText_->SetPos(50, 150);
-		debugText_->Printf(
-			"Root:(%f,%f,%f)", worldTransforms_[PartId::kRoot].translation_.x,
-			worldTransforms_[PartId::kRoot].translation_.y,
-			worldTransforms_[PartId::kRoot].translation_.z);
-	}
-
-	// 上半身回転処理
-	{
-		// 上半身の回転の速さ[ラジアン/frame]
-		const float kChestRotSpeed = 0.05f;
-
-		// 押した方向で移動ベクトルを変更
-		if (input_->PushKey(DIK_U)) {
-			worldTransforms_[PartId::kChest].rotation_.y -= kChestRotSpeed;
-		}
-		else if (input_->PushKey(DIK_I)) {
-			worldTransforms_[PartId::kChest].rotation_.y += kChestRotSpeed;
-		}
-	}
-	// 上半身回転処理
-	{
-		// 上半身の回転の速さ[ラジアン/frame]
-		const float kHipRotSpeed = 0.05f;
-
-		// 押した方向で移動ベクトルを変更
-		if (input_->PushKey(DIK_J)) {
-			worldTransforms_[PartId::kHip].rotation_.y -= kHipRotSpeed;
-		}
-		else if (input_->PushKey(DIK_K)) {
-			worldTransforms_[PartId::kHip].rotation_.y += kHipRotSpeed;
-		}
-	}
-
 	debugCamera_->Update();
+
+	// 自キャラの更新
+	player_->Update();
 }
 
 void GameScene::Draw() {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+
+	// 自キャラの描画
+	player_->Draw();
 
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
@@ -369,7 +243,7 @@ void GameScene::Draw() {
 	dxCommon_->ClearDepthBuffer();
 #pragma endregion
 
-#pragma region 3Dオブジェクト描画
+#pragma region オブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
@@ -377,11 +251,6 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	
-	for (int i = 2; i < kNumPartId; i++)
-	{
-		model_->Draw(worldTransforms_[i], viewProjection_, textureHandle_);
-	}
-
 	//debugCamera_->GetViewProjection()
 
 	// 3Dオブジェクト描画後処理

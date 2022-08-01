@@ -13,6 +13,7 @@
 #include "WinApp.h"
 #include "Matrix.h"
 #include "XMFloat.h"
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -63,8 +64,9 @@ public: // メンバ変数
 
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
-	Input* input_ = nullptr;
+	
 	Audio* audio_ = nullptr;
+	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
 	// テクスチャハンドル
@@ -77,7 +79,7 @@ public: // メンバ変数
 	XMFloat3 random;
 
 	// ワールドトランスフォーム
-	WorldTransform worldTransforms_[100];
+	
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
@@ -86,6 +88,9 @@ public: // メンバ変数
 
 	// まとりっくす
 	Matrix matrix;
+
+	// 自キャラ
+	Player* player_ = nullptr;
 
 	// カメラ上方向の角度
 	float viewAngle = 0.0f;
