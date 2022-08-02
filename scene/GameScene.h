@@ -13,6 +13,7 @@
 #include "WinApp.h"
 #include "Matrix.h"
 #include "XMFloat.h"
+#include "Vector3.h"
 
 /// <summary>
 /// ゲームシーン
@@ -25,20 +26,20 @@ public: // メンバ変数
 		kRoot,	// 大元
 		kSpine,	// 脊髄
 		kChest,	// 胸
-		kHead,	// 頭
-		kArmL,	// 左腕
-		kArmR,	// 右腕
-		kHip,	// 尻
-		kLegL,	// 左足
-		kLegR,	// 右足
+		//kHead,	// 頭
+		//kArmL,	// 左腕
+		//kArmR,	// 右腕
+		//kHip,	// 尻
+		//kLegL,	// 左足
+		//kLegR,	// 右足
 
 		kNumPartId
 	};
 
-  public: // メンバ関数
-	/// <summary>
-	/// コンストクラタ
-	/// </summary>
+public: // メンバ関数
+  /// <summary>
+  /// コンストクラタ
+  /// </summary>
 	GameScene();
 
 	/// <summary>
@@ -61,14 +62,14 @@ public: // メンバ変数
 	/// </summary>
 	void Draw();
 
-  private: // メンバ変数
+private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
 	// テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	uint32_t textureHandle_[2] = {0, 0};
 
 	// 3Dモデル
 	Model* model_ = nullptr;
@@ -89,6 +90,16 @@ public: // メンバ変数
 
 	// カメラ上方向の角度
 	float viewAngle = 0.0f;
+
+	const int ray = 5;
+
+	const int floor = 7;
+
+public:
+	Vector3 startRay;
+	Vector3 endRay;
+
+	bool CollisionRayToObject(Vector3 startRay, Vector3 endRay, WorldTransform object);
 
 	/// <summary>
 	/// ゲームシーン用
